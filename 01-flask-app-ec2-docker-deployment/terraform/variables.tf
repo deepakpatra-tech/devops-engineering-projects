@@ -11,3 +11,7 @@ variable "cidr_block_subnet" {
   type = string
   description = "subnet cidr block"
 }
+variable "bucketname" {
+  type = string
+  description = "backend s3 bucket"
+}

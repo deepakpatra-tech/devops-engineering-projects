@@ -39,3 +39,8 @@ resource "aws_route_table" "flask-app-RT-public" {
     Name = "flask-public-RT"
   }
 }
+
+resource "aws_route_table_association" "aws_route_table_association" {
+  subnet_id = aws_subnet.flask-public-subnet.id
+  route_table_id = aws_route_table.flask-app-RT-public.id
+}

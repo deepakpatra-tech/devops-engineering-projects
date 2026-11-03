@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket = var.bucketname
+    bucket = "cloudx-terraform-state-deepak-2026"
     key = "dev/terraform.tfstate"
-    region = var.aws_region
+    region = "ap-south-1"
     use_lockfile = true
   }
 }

@@ -7,6 +7,9 @@ on:
 jobs:
     build-test:
         runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./01-flask-app-ec2-docker-deployment
         steps:
             - name: checkout code
               uses: actions/checkout@v7
@@ -30,11 +33,14 @@ jobs:
             
             - name: Run Python & Test
               run: |
-                python app.py
+                python app.py &
                 sleep 5
                 curl http://localhost:5000
     deploy-job:
         runs-on: ubuntu-latest
+        defaults:
+          run:
+            working-directory: ./01-flask-app-ec2-docker-deployment
         needs: build-test
         steps:
             - name: checkout code

@@ -62,18 +62,23 @@ jobs:
               run: aws sts get-caller-identity
 
             - name: intialize terraform
+              working-directory: ./01-flask-app-ec2-docker-deployment/terraform
               run: terraform init
             
             - name: format code
+              working-directory: ./01-flask-app-ec2-docker-deployment/terraform
               run: terraform fmt
 
             - name: validate code
+              working-directory: ./01-flask-app-ec2-docker-deployment/terraform
               run: terraform validate
             
             - name: terraform plan
+              working-directory: ./01-flask-app-ec2-docker-deployment/terraform
               run: terraform plan -out=tfplan
 
             - name: apply code
+              working-directory: ./01-flask-app-ec2-docker-deployment/terraform
               if: github.event_name =='push' || github.event_name == 'workflow_dispatch'
               run: terraform apply --auto-approve
 

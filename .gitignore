@@ -1,4 +1,27 @@
+
+# Python
 __pycache__/
-*.tfvars
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+.env
+
+# Terraform
+.terraform/
 *.tfstate
 *.tfstate.*
+*.tfvars
+*.tfplan
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform lock file
+# DO NOT ignore .terraform.lock.hcl
+
+# IDE
+.vscode/
+.idea/

@@ -26,7 +26,8 @@ jobs:
                 key: ${{ runner.os }}-pip-${{ hashFiles('./01-flask-app-ec2-docker-deployment/requirements.txt') }}
 
             - name: install dependecies
-              run: pip install --no-cache-dir -r requirements.txt
+              working-directory: ./01-flask-app-ec2-docker-deployment
+              run: pip install -r requirements.txt
             
             - name: Test flask app
               run: pytest

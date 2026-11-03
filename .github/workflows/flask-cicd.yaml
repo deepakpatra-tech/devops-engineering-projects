@@ -1,0 +1,76 @@
+name: flask cicd workflow
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+jobs:
+    build-test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v7
+
+            - name: setup python
+              uses: actions/setup-python@v4
+              with:
+                python-version: '3.12' 
+
+            - name: cache dependenices
+              uses: actions/cache@v4
+              with:
+                path: ~/.cache/pip
+                key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+
+            - name: install dependecies
+              run: pip install --no-cache-dir -r requirements.txt
+            
+            - name: Test flask app
+              run: pytest
+            
+            - name: Run Python & Test
+              run: |
+                python app.py
+                sleep 5
+                curl http://localhost:5000
+    deploy-job:
+        runs-on: ubuntu-latest
+        needs: build-test
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v7
+
+            - name: setup terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                terraform-version: '1.9.8'
+
+            - name: configure aws
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+                aws-secret-access-key-id: ${{ secrets.AWS_SECRET_KEY }}
+                aws-region: ap-south-1
+
+            - name: verify aws login
+              run: aws sts get-caller-identity
+
+            - name: intialize terraform
+              run: terraform init
+            
+            - name: format code
+              run: terraform fmt
+
+            - name: validate code
+              run: terraform validate
+            
+            - name: terraform plan
+              run: terraform plan -out=tfplan
+
+            - name: apply code
+              if: github.event_name =='push' || github.event_name == 'workflow_dispatch'
+              run: terraform apply --auto-approve
+
+              
+              
+            
